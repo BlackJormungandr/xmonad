@@ -1,0 +1,51 @@
+Config { font = "xft:Terminus:weight=regular:pixelsize=14:antialias=true:hinting=true"
+        , borderColor = "black"
+        , border = TopB
+        , bgColor = "black"
+        , fgColor = "grey"
+        , position = TopW L 100
+        , allDesktops = True
+        , commands = [ Run Weather "CYVR" ["-t","<tempC>C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
+                        , Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                        , Run Network "eth1" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                        , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                        , Run Memory ["-t","Mem: <usedratio>%"] 10
+                        , Run Swap [] 10
+                        , Run Alsa "default" "Master"
+                          [ "--template", "Vol [<volume>%] (<status>)"
+                          , "--"
+                          , "--on", ""
+                          , "--off", "Muted" 
+			                    , "-H", "100"
+			                    , "-h", "<fc=#458588>Max</fc>"
+			                    , "-m", "<fc=#d79921>Med</fc>"
+			                    , "-l", "Low"
+			                    , "--offc", "#cc241d"
+			                    , "--onc", "#98971a"
+			                    ]
+                        , Run BatteryP ["BAT1"]
+                          ["--template", "Bat [<left>] (<acstatus>)"
+                          , "--L", "15"
+                          , "--H", "95"
+                          , "--low"      , "#cc241d"
+                          , "--normal"   , "#d65d0e"
+                          , "--high"     , "#458588"
+                          , "--" -- battery specific options
+                          -- discharging status
+                          , "-o", "Discharging <timeleft>"
+                          -- AC "on" status
+                          , "-O", "<fc=#98971a>Charging</fc>"
+                          -- charged status
+                          , "-i", "<fc=#458588>Full</fc>"
+			                    , "-P"
+			                    , "-A", "5"
+			                    , "-a", "notify-send -u critical 'Battery running out!!'"
+			                    ] 60
+                        , Run Com "uname" ["-s","-r"] "" 36000
+                        , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                        , Run StdinReader
+                        ]
+        , sepChar = "%"
+        , alignSep = "}{"
+        , template = "%StdinReader% }{ %battery% | %alsa:default:Master% | %uname% | <fc=#ee9a00>%date%</fc> "
+        }
