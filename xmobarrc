@@ -2,7 +2,7 @@ Config { font = "xft:Terminus:weight=regular:pixelsize=14:antialias=true:hinting
         , borderColor = "black"
         , border = TopB
         , bgColor = "black"
-        , fgColor = "grey"
+        , fgColor = "white"
         , position = TopW L 100
         , allDesktops = True
         , commands = [ Run Weather "CYVR" ["-t","<tempC>C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
@@ -12,7 +12,7 @@ Config { font = "xft:Terminus:weight=regular:pixelsize=14:antialias=true:hinting
                         , Run Memory ["-t","Mem: <usedratio>%"] 10
                         , Run Swap [] 10
                         , Run Alsa "default" "Master"
-                          [ "--template", "Vol [<volume>%] (<status>)"
+                          [ "--template", "Vol [<volume>%]"
                           , "--"
                           , "--on", ""
                           , "--off", "Muted" 
@@ -29,23 +29,24 @@ Config { font = "xft:Terminus:weight=regular:pixelsize=14:antialias=true:hinting
                           , "--H", "95"
                           , "--low"      , "#cc241d"
                           , "--normal"   , "#d65d0e"
-                          , "--high"     , "#458588"
+                          , "--high"     , "#0FA122"
                           , "--" -- battery specific options
                           -- discharging status
                           , "-o", "Discharging <timeleft>"
                           -- AC "on" status
                           , "-O", "<fc=#98971a>Charging</fc>"
                           -- charged status
-                          , "-i", "<fc=#458588>Full</fc>"
+                          , "-i", "<fc=#0FA122>Full</fc>"
 			                    , "-P"
 			                    , "-A", "5"
 			                    , "-a", "notify-send -u critical 'Battery running out!!'"
 			                    ] 60
                         , Run Com "uname" ["-s","-r"] "" 36000
                         , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
-                        , Run StdinReader
+                        , Run UnsafeStdinReader
+                        , Run Com "/home/dawn/.xmonad/pacupdate" [] "pacupdate" 36000
                         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "%StdinReader% }{ %battery% | %alsa:default:Master% | %uname% | <fc=#ee9a00>%date%</fc> "
+        , template = "<fc=#e8e4c9>%UnsafeStdinReader%</fc>}{ <fc=#e8e4c9>%battery%</fc> | <fc=#e8e4c9>%alsa:default:Master%</fc> | <fc=#e8e4c9>%pacupdate%</fc>| <fc=#e8e4c9>%date%</fc> "
         }
